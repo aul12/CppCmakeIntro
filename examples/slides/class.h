@@ -1,7 +1,7 @@
 class A : public B {
     public:
         A(int c, int d);
-        int getC() const;
+        int getD() const;
     private:
         int d;
 };
