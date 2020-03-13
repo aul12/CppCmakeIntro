@@ -1,6 +1,6 @@
 RUBBER=rubber
 DOT=dot
-VIEWER=evince
+VIEWER=xdg-open
 PRESENTER=pdfpc
 
 all: main.pdf
@@ -30,6 +30,9 @@ clean:
 	rm -f *.bcf
 	rm -f build.png
 	rm -rf _minted-main
+	rm -f *.snm
+	rm -f *.nav
 
 clean_all: clean
-	rm *.pdf
+	rm -f *.pdf
+	rm -f *.pdfpc
