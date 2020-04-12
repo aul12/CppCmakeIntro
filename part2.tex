@@ -7,6 +7,7 @@
 \usepackage{tikz}
 \usepackage{booktabs}
 \usepackage{minted}
+\usepackage[ngerman]{babel}
 
 \usetheme{Hannover}
 \usecolortheme{dove}
@@ -32,6 +33,7 @@
 
 
 \title{Eine Einführung in modernes C++ mit CMake}
+\subtitle{Teil 2 -- Fortgeschrittenes C++}
 \author{Paul Nykiel}
 \date{\today}
 
@@ -43,120 +45,6 @@
     \pnote{Feedback erwünscht}
     \tableofcontents
 }
-
-\section{Einleitung}
-\begin{frame}
-    \frametitle{Was ist C++}
-    \pnote{Kurz Hintergrund für Einordnung}
-    \begin{itemize}
-        \item \st{C with classes}
-            \pnote{Ursprünglicher Name, da initial nur Erweiterung von C um Objektorientung}
-            \pause
-        \item Standardisiert und offen
-            \pnote{Viele Compiler, Gute Dokumentation,  Entscheidungen werden im Komitee getroffen, nicht von einzelnen Firmen}
-            \pause
-        \item Wird in quasi jeder Domäne genutzt
-            \pnote{Embedded, Betriebssysteme, Systemnahe Entwicklung, Signalverarbeitung (Codierung), Desktop-Anwendungen, Spiele, Server-Anwendungen, HPC...}
-            \pause
-        \item Ziele: Performanter und sicherer Code
-            \pnote{Sicheres Typensystem, checks zur Compile Time (unterschied zur Run Timer hervorheben), maschinennah}
-    \end{itemize}
-\end{frame}
-
-\begin{frame}
-    \frametitle{C++ im Vergleich zu Java}
-    \begin{itemize}
-        \item Undefiniertes Verhalten 
-            \pnote{Null-Pointer, fehlendes Return, division durch Null. Kann nicht vom Compiler kontrolliert werden und zur Runtime gibt es keine passnden Mechanismen  z.B. Microcontroller. Aber quasi jede Sprache hat undefiniertes Verhalten bezeichnet es aber nicht so (z.B. Race-Conditions)}
-            \pause
-        \item Keine automatische Speicherverwaltung 
-            \pnote{Keine Aufgabe der Sprache, wenn benötigt liefert die STL passende Container. Bei Microcontroller oder Echtzeitanwendungen nicht gewünscht.
-            Unterscheidung Heap und Stack hervorheben.}
-            \pause
-        \item Kleiner Sprachkern und kleine Standardlibrary 
-            \pnote{60 Schlüsselwörter, C\# z.B. 86. Keine UI, kein Networking...}
-            \pause
-        \item Templates 
-            \pnote{Nicht generics, viel mächtiger, z.B. Boost MSM, sichere Pointer (Guideline support library), Turing-vollständig}
-            \pause
-        \item Operatorenüberladung
-            \pnote{Bsp. Vektor, Iteratoren...}
-            \pause
-        \item Tendentiell weniger tiefe Vererbung
-            \pnote{Z.b. Container und Iteratoren, keine Überklasse aber Eigenschaften (forward-Iterator), dadurch weniger Boilerplate}
-            \pause
-        \item Mehrfachvererbung
-            \pnote{Dadurch keine Interfaces notwendig, aber selten genutzt}
-            \pause
-        \item Definierte Objektlebenszeit
-            \pnote{Konstruktor, Destruktor, Scope}
-    \end{itemize}
-\end{frame}
-
-\section{Ein erstes C++ Programm}
-
-\begin{frame}
-    \Huge{Beispiel: Hello World}
-    \pnote{Hello World. Erklärung: include, keine main-Klasse, namespaces, Operatorenüberladung, Vergleich Code-Länge mit Java}
-\end{frame}
-
-\begin{frame}
-    \frametitle{Vom Sourcecode zur ausführbaren Datei}
-    \begin{columns}
-        \begin{column}{.5\textwidth}
-            \begin{itemize}
-                \item<+-> Präprozessor 
-                    \pnote{Erklärung include und define an Hello World Bsp (gcc -E), einfache Textersetzung, Erklärung an Tafel}
-                \item<+-> Compiler 
-                    \pnote{Übersetzten von der Übersetzungseinheit in Assemblercode, Übersetzungseinheit definieren}
-                \item<+-> Linker 
-                    \pnote{Baut Programm zusammen und sucht Funktionen in anderen Übersetzungseinheiten}
-                \item<+-> \lstinline{\#include}s sichern Typkonsistenz
-                    \pnote{Unterschied Definition und Deklaration, Doku im Header gut für Übersicht}
-                \item<+-> Templates müssen im Header definiert werden
-                    \pnote{Compiler muss alle instanziierungen kennen, langsamer Buildprozess}
-            \end{itemize}
-        \end{column}
-        \begin{column}{.5\textwidth}
-            \begin{figure}
-                \includegraphics[width=\textwidth]{build.pdf}
-            \end{figure}
-        \end{column}
-    \end{columns}
-\end{frame}
-
-\begin{frame}
-    \Huge{Beispiel: Eine zweite Übersetzungseinheit}
-    \pnote{Zweites Cpp File, alles einfach in g++ schmeißen,
-    Message als std::string (nicht ref)}
-\end{frame}
-
-\section{CMake}
-
-\begin{frame}
-    \frametitle{Warum ein Buildsystem}
-    \begin{itemize}
-        \item Nur geänderte Dateien neu kompilieren 
-            \pnote{erkennt welche Files geändert wurde, größere Projekte kompilieren sonst jedes mal mehrere Minuten bis Stunden}
-            \pause
-        \item Einzelner Befehl an Compiler wird zu kompliziert
-            \pnote{Vor allem bei vielen Flags und vielen Dateien}
-            \pause
-        \item Portabilität
-            \pnote{Compiler und Flags werden unnabhängig vom Os und von installierten Compilern angegeben}
-    \end{itemize}
-\end{frame}
-
-\begin{frame}
-    \frametitle{CMake}
-    Wird durch Datei \lstinline{CMakeLists.txt} konfiguriert:
-    \inputminted{cmake}{examples/slides/CMakeLists.txt}
-\end{frame}
-
-\begin{frame}
-    \Huge{Beispiel: CMake}
-    \pnote{Einfaches CMake File dazu bauen, nochmal kompilieren, Lib ändern zeigen dass main nicht neu gebaut wird}
-\end{frame}
 
 \section{Mehr C++}
 
@@ -175,75 +63,6 @@
         \item Für große Objekte unnötige Performanceeinbuße
             \pnote{Spricht gegen das was ich in Einleitung gesagt habe, Performance in C++ wichtig}
     \end{itemize}
-\end{frame}
-
-\begin{frame}
-    \frametitle{Pointer}
-    \begin{itemize}
-        \item Pointer 
-            \pnote{"Vererbt" von C}
-            \pause
-        \item Angst!
-            \pause
-        \item Gefährlich!
-            \pause
-        \item Böse!
-            \pnote{Pointer kurz erklären, kurz Owner (malloc/new) bzw. nur als Referenz erklären}
-            \pause
-        \item Nicht schlimm aber viel Fehlerpotential
-            \pnote{Leaks, Owner nicht definiert, vor allem bei Librarys relevant}
-            \pause
-        \item \lstinline{int b = 17; int *a = &b;}
-            \pnote{Pointer als Referenz}
-            \pause
-        \item \lstinline{int *c = new int();}
-            \pnote{Pointer als Owner, Hier gleich ein potentieller Leak}
-            \pause
-        \item \lstinline{delete c;}
-            \pnote{Immer mit delete, das will doch wirklich keiner}
-            \pause
-        \item Gehört nicht in die Anwendungslogik
-            \pnote{Permanente Fehlerquelle, Zeitverschwendung, Ab jetzt als Raw-Pointer bezeichnet und nie wieder verwenden!}
-    \end{itemize}
-\end{frame}
-
-\begin{frame}
-    \frametitle{Stack und Heap}
-    \begin{columns}
-        \begin{column}{.5\textwidth}
-            \begin{itemize}
-                \item<+-> Hauptspeicher (RAM) wird aus zwei Richtungen vergeben
-                    \pnote{Aufteilung in Stack für Performance und Heap für dynamischen Speicher}
-                \item<+-> Stack wird für Funktion aufgebaut
-                    \pnote{Schnell da FILO, wird automatisch wieder abgebaut}
-                \item<+-> Heap für dynamischen Speicher
-                    \pnote{Langsam, freier Speicher muss erst gefunden werden}
-                \item<+-> Speicher auf dem Heap muss händisch reserviert und freigegeben werden
-                    \pnote{Memory Leak wenn nicht wieder freigegeben}
-                \item<+-> Bei mehr als einem Owner Verwaltung kompliziert
-                    \pnote{Owner: Funktion die Pointer kennt}
-            \end{itemize}
-        \end{column}
-        \begin{column}{.5\textwidth}
-            \begin{figure}[H]
-                \centering
-                \begin{tikzpicture}
-                    \draw [draw] (0,0) rectangle (3,5);
-                    \filldraw [draw=black,fill=gray!20] (0,0) rectangle (3,1) node[pos=.5] {Stack};
-                    \filldraw [draw=black,fill=gray!20] (0,4.5) rectangle (3,5) node[pos=.5] {Heap};
-                    \filldraw [draw=black,fill=gray!20] (0,3.5) rectangle (3,4) node[pos=.5] {Heap};
-                    \draw [->] (1.5,1) -- (1.5,2);
-                \end{tikzpicture}
-            \end{figure}
-        \end{column}
-    \end{columns}
-\end{frame}
-
-\begin{frame}
-    \frametitle{Beispiel Pointer}
-    \lstinputlisting{examples/slides/pointer.cpp}
-    \pnote{Auf Stack: Kein Owner}
-    \pnote{Auf Heap: Owner}
 \end{frame}
 
 \begin{frame}

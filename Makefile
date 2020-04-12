@@ -1,18 +1,25 @@
 RUBBER=rubber
 DOT=dot
 VIEWER=xdg-open
+SCREEN=screen
 PRESENTER=pdfpc
 
-all: main.pdf
+all: part1.pdf part2.pdf
 
-main.pdf: build.pdf main.tex
-	$(RUBBER) --unsafe -d main.tex
+part1.pdf: build.pdf part1.tex
+	$(RUBBER) --unsafe -d part1.tex
+
+part2.pdf: part2.tex
+	$(RUBBER) --unsafe -d part2.tex
 
 build.pdf: build.dot
 	$(DOT) -T pdf -o build.pdf build.dot
 
-show: main.pdf
-	$(VIEWER) main.pdf 2> /dev/null
+show1: part1.pdf
+	$(SCREEN) -dm $(VIEWER) part1.pdf 2> /dev/null
+
+show2: part2.pdf
+	$(SCREEN) -dm $(VIEWER) part2.pdf 2> /dev/null
 
 present: main.pdf
 	$(PRESENTER) main.pdf

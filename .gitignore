@@ -8,4 +8,4 @@
 *.pdfpc
 *.snm
 *.toc
-_minted-main
+_minted-*
