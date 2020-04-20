@@ -4,13 +4,16 @@ VIEWER=xdg-open
 SCREEN=screen
 PRESENTER=pdfpc
 
-all: part1.pdf part2.pdf
+all: part1.pdf part2.pdf part3.pdf
 
 part1.pdf: build.pdf part1.tex
 	$(RUBBER) --unsafe -d part1.tex
 
 part2.pdf: part2.tex
 	$(RUBBER) --unsafe -d part2.tex
+
+part3.pdf: part3.tex
+	$(RUBBER) --unsafe -d part3.tex	
 
 build.pdf: build.dot
 	$(DOT) -T pdf -o build.pdf build.dot
@@ -20,6 +23,9 @@ show1: part1.pdf
 
 show2: part2.pdf
 	$(SCREEN) -dm $(VIEWER) part2.pdf 2> /dev/null
+
+show3: part3.pdf
+	$(SCREEN) -dm $(VIEWER) part3.pdf 2> /dev/null
 
 present: main.pdf
 	$(PRESENTER) main.pdf

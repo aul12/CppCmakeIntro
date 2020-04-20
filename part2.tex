@@ -46,91 +46,8 @@
     \tableofcontents
 }
 
-\section{Mehr C++}
-
-\begin{frame}
-    \frametitle{Speicherverwaltung}
-    \begin{itemize}
-        \item \lstinputlisting{examples/slides/copy.cpp}
-            \pnote{f ist Funktion list->list und b ist list. Was passiert hier, wie viele Objekte existieren, wie viel Speicher wird genutzt, wie oft wird kopiert}
-            \pause
-        \item Jegliche Zuweisung ist eine Kopie, auch für Funktionsargumente
-            \pnote{Funktionsargumente, Zuweisung.... Explizit große Container erwähnen}
-            \pause
-        \item Einfach verständlich
-            \pnote{Vgl. komisches Java Verhalten. Trivial ein Objekt zu kopieren, deep copy in Java und C\# schwierig (Internet: selber implementieren oder serializieren und deserializieren)}
-            \pause
-        \item Für große Objekte unnötige Performanceeinbuße
-            \pnote{Spricht gegen das was ich in Einleitung gesagt habe, Performance in C++ wichtig}
-    \end{itemize}
-\end{frame}
-
-\begin{frame}
-    \frametitle{Smart-Pointer}
-    \begin{itemize}
-        \item Standardlibrary kann Verwaltung übernehmen
-            \pnote{Erwähnung Operatorenüberladung und Lifetime}
-            \pause
-        \item \lstinline{unique\_ptr}
-            \pnote{Quasi Drop-In-Replacement für Raw-Ptr, machen selber den Speicher am Ende der Lebenszeit frei}
-            \pause
-        \item Genau ein Owner
-            \pnote{Explizit verboten zu kopieren (=delete), Bsp. kopieren in Klasse, jetzt uneindeutiger Owner. Oftmals für Factory Methoden, kein Overhead zu Raw-Pointer}
-            \pause
-        \item
-            \lstinline{std::unique\_ptr<int> a = std::make\_unique<int>(17);}
-            \pause
-        \item \lstinline{shared\_ptr}
-            \pnote{Zusätzlich Zählen von Instanzen (siehe Copy-Constructor)}
-            \pause
-        \item Quasi immer nutzbar
-            \pnote{Dafür kopieren... minimal langsamer (nicht bei Zugriff)}
-        \item
-            \lstinline{std::shared\_ptr<int> a = std::make\_shared<int>(17);}
-    \end{itemize}
-\end{frame}
-
-\begin{frame}
-    \frametitle{Referenzen}
-    \begin{itemize}
-        \item Sprachfeature kein Library-Feature
-            \pnote{Werden vom Compiler zu Pointern gemacht, nie Owner. Hier betrachtet L-Value-Referenzen}
-            \pause
-        \item Können nicht null sein
-            \pnote{Zeigen immer auf anderes Objekt, eine Art Alias}
-            \pause
-        \item Können aber ungültig werden
-            \pnote{z.B. lokale Variablen}
-            \pause
-        \item
-            \lstinline{int b = 17; int &a = b;}
-    \end{itemize}
-\end{frame}
-
-\begin{frame}
-    \frametitle{Zusammenfassung Pointer}
-    \begin{itemize}
-        \item Raw-Pointer: Sollten quasi nie verwendet werden
-            \pnote{Ausser pre C++11 und mit C APIs}
-            \pause
-        \item Unique-Pointer: Oftmals ersatz für Raw-Pointer
-            \pnote{Limitierung: Ein Owner kein Overhead}
-            \pause
-        \item Shared-Pointer: Sichere Pointer für beliebig viele Owner
-            \pnote{Am Ähnlichsten zu Java, aber etwas Overhead (immer noch weniger als Java und definierte Lifetime)}
-            \pause
-        \item Referenzen: Oftmals um Kopien zu vermeiden
-            \pnote{Sprachfeature}
-    \end{itemize}
-\end{frame}
-
-\begin{frame}
-    \Huge{Beispiel: Pointer \& Referenzen}
-    \pnote{Wo Pointer/Ref einbauen? Frage welche Sorte Pointer. HelloWorld Lib Ergänzen mit Referenzen, jetzt in CLion}
-\end{frame}
 
 \section{Design Pattern}
-
 \begin{frame}
     \frametitle{Const-Correctness}
     \begin{itemize}
@@ -314,76 +231,6 @@
     \end{itemize}
 \end{frame}
 
-\section{Tools}
-\pnote{Kleine Auswahl an Tools}
-\begin{frame}
-    \frametitle{GTest}
-    \lstinputlisting{examples/slides/gtest.cpp}
-    \pnote{Diverseste Bedinungen, z.B. auch Float, integration in CLion}
-\end{frame}
-
-\begin{frame}
-    \frametitle{Debugging und Fehlersuche}
-    \begin{itemize}
-        \item Debugger
-            \pnote{z.B. GDB, quasi beliebig, wichtigestes Tool}
-            \pause
-        \item Valgrind
-            \pnote{Erkennt Speicherlecks, undefiniertes Verhalten, aber Langsam}
-            \pause
-        \item LibAdressSanitizer (Asan)
-            \pnote{Wie Valgrind nur schnell und neuer}
-            \pause
-        \item clang-tidy
-            \pnote{Statische Analyse, Fehler vor der Compilieren entdecken}
-    \end{itemize}
-\end{frame}
-
-\section{Abschluss}
-
-\begin{frame}
-    \frametitle{Was fehlt?}
-    \begin{itemize}
-        \item R-Value Referenzen, forward/universal Referenzen
-            \pnote{Neue Form von Referenz (ab C++11), primär benötigt wenn nicht triviale Speicherverwaltung}
-            \pause
-        \item Move
-            \pnote{Speicher von einer Klasse an eine andere Übergeben, z.B. return, per default da, sonst wenn nicht triviale Speicherverwaltung}
-            \pause
-        \item Destruktor und Copy / Move Konstruktor
-            \pnote{Wird per default angelegt, muss nur angelegt werden wenn nicht trivialer Speicher verwaltet wird}
-            \pause
-        \item Operatorenüberladung
-            \pnote{Nur spezielle Member Funktionen, einfach!}
-            \pause
-        \item Friend Definition
-            \pnote{Wird selten benötigt, einfach einzulesen}
-            \pause
-        \item Meta-Programming
-            \pnote{Touring-vollständige Sprache zur CompileTime, type\_traits, bringt zwar Vorteile aber nicht notwendig}
-    \end{itemize}
-\end{frame}
-
-\begin{frame}
-    \frametitle{Mehr Informationen}
-    \begin{itemize}
-        \item \url{en.cppreference.com}
-            \pnote{Dokumentation der Sprache und STL, deutsche Version ist Shit}
-            \pause
-        \item \url{github.com/isocpp/CppCoreGuidelines}
-            \pnote{Gut für Designentscheidungen}
-            \pause
-        \item \url{godbolt.org}
-            \pnote{Was erzeugt der Compiler für Code auf unterschiedlichen Plattformen, eher als Spielzeug}
-            \pause
-        \item \url{git.spatz.wtf/spatzenhirn/cppcmakeintro}
-            \pnote{Dieser Vortrag}
-            \pause
-        \item Scott Meyers: Effective Modern C++
-            \pnote{Gutes Buch, deutliche Vertiefung}
-    \end{itemize}
-\end{frame}
-
 \section{Praxis}
 \begin{frame}
     \Huge{Praxis: \pause Huffman-Codierer}
@@ -399,7 +246,7 @@
         \item Relative Häufigkeiten ($\approx$ Wahrscheinlichkeiten) berechnen (Byteweise)
             \pnote{Blockgröße 8-bit}
             \pause
-        \item Huffman-Baum konstruieren
+        \item Huffman-Baum konstruieren (Dafür eigene \lstinline{template} Klasse für B-Bäume)
             \pause
             \pnote{Erstmal separate Template-Klasse für Baum, dann nutzen für Huffman}
             \begin{itemize}
@@ -422,6 +269,4 @@
             \pnote{Beispiel an Tafel!}
     \end{itemize}
 \end{frame}
-
-
 \end{document}

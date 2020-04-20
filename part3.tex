@@ -1,0 +1,119 @@
+\documentclass[aspectratio=169]{beamer}
+
+\usepackage[utf8]{inputenc}
+\usepackage{soul}
+\usepackage{pdfpcnotes}
+\usepackage{listings}
+\usepackage{tikz}
+\usepackage{booktabs}
+\usepackage{minted}
+\usepackage[ngerman]{babel}
+
+\usetheme{Hannover}
+\usecolortheme{dove}
+
+\AtBeginSection[]{
+  \begin{frame}
+  \vfill
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center,shadow=true,rounded=true]{title}
+    \usebeamerfont{title}\insertsectionhead\par%
+  \end{beamercolorbox}
+  \vfill
+  \end{frame}
+}
+
+\lstset{language=C++,
+                basicstyle=\ttfamily,
+                keywordstyle=\color{blue}\ttfamily,
+                stringstyle=\color{red}\ttfamily,
+                commentstyle=\color{purple}\ttfamily,
+                morecomment=[l][\color{magenta}]{\#}
+}
+
+
+\title{Eine Einführung in modernes C++ mit CMake}
+\subtitle{Teil 3 -- Speicherverwaltende Klassen und Tools}
+\author{Paul Nykiel}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\frame{
+    \pnote{Sofort Fragen!}
+    \pnote{Feedback erwünscht}
+    \tableofcontents
+}
+
+\section{Tools}
+\pnote{Kleine Auswahl an Tools}
+\begin{frame}
+    \frametitle{GTest}
+    \lstinputlisting{examples/slides/gtest.cpp}
+    \pnote{Diverseste Bedinungen, z.B. auch Float, integration in CLion}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Debugging und Fehlersuche}
+    \begin{itemize}
+        \item Debugger
+            \pnote{z.B. GDB, quasi beliebig, wichtigestes Tool}
+            \pause
+        \item Valgrind
+            \pnote{Erkennt Speicherlecks, undefiniertes Verhalten, aber Langsam}
+            \pause
+        \item LibAdressSanitizer (Asan)
+            \pnote{Wie Valgrind nur schnell und neuer}
+            \pause
+        \item clang-tidy
+            \pnote{Statische Analyse, Fehler vor der Compilieren entdecken}
+    \end{itemize}
+\end{frame}
+
+\section{Abschluss}
+
+\begin{frame}
+    \frametitle{Was fehlt?}
+    \begin{itemize}
+        \item R-Value Referenzen, forward/universal Referenzen
+            \pnote{Neue Form von Referenz (ab C++11), primär benötigt wenn nicht triviale Speicherverwaltung}
+            \pause
+        \item Move
+            \pnote{Speicher von einer Klasse an eine andere Übergeben, z.B. return, per default da, sonst wenn nicht triviale Speicherverwaltung}
+            \pause
+        \item Destruktor und Copy / Move Konstruktor
+            \pnote{Wird per default angelegt, muss nur angelegt werden wenn nicht trivialer Speicher verwaltet wird}
+            \pause
+        \item Operatorenüberladung
+            \pnote{Nur spezielle Member Funktionen, einfach!}
+            \pause
+        \item Friend Definition
+            \pnote{Wird selten benötigt, einfach einzulesen}
+            \pause
+        \item Meta-Programming
+            \pnote{Touring-vollständige Sprache zur CompileTime, type\_traits, bringt zwar Vorteile aber nicht notwendig}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Mehr Informationen}
+    \begin{itemize}
+        \item \url{en.cppreference.com}
+            \pnote{Dokumentation der Sprache und STL, deutsche Version ist Shit}
+            \pause
+        \item \url{github.com/isocpp/CppCoreGuidelines}
+            \pnote{Gut für Designentscheidungen}
+            \pause
+        \item \url{godbolt.org}
+            \pnote{Was erzeugt der Compiler für Code auf unterschiedlichen Plattformen, eher als Spielzeug}
+            \pause
+        \item \url{git.spatz.wtf/spatzenhirn/cppcmakeintro}
+            \pnote{Dieser Vortrag}
+            \pause
+        \item Scott Meyers: Effective Modern C++
+            \pnote{Gutes Buch, deutliche Vertiefung}
+    \end{itemize}
+\end{frame}
+
+\end{document}

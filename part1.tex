@@ -108,14 +108,17 @@
 
 \begin{frame}
     \Huge{Beispiel: Eine zweite Übersetzungseinheit}
-    \pnote{Zweites C File, alles einfach in gcc schmeißen, Message als char\[\]}
+    \pnote{Zweites C File, zuerst kein Header, alles einfach in gcc schmeißen, Message als char\[\]}
+    \pnote{Zweites C File, separater Header, erläutern das nicht alles in den Header}
+    \pnote{Gegenbeweise: alles in Header, noch weitere Übersetzungseinheit, Linker Fehler}
+    \pnote{Wieso nicht alles als Header? Buildzeit}
 \end{frame}
 
 \begin{frame}
     \frametitle{Warum ein Buildsystem}
     \begin{itemize}
         \item Nur geänderte Dateien neu kompilieren 
-            \pnote{erkennt welche Files geändert wurde, größere Projekte kompilieren sonst jedes mal mehrere Minuten bis Stunden}
+            \pnote{erkennt welche Files geändert wurde, größere Projekte kompilieren sonst jedes mal mehrere Minuten bis Stunden (unser Code schon circa 2 Minuten)}
             \pause
         \item Einzelner Befehl an Compiler wird zu kompliziert
             \pnote{Vor allem bei vielen Flags und vielen Dateien}
@@ -136,7 +139,7 @@
     \pnote{Einfaches CMake File dazu bauen, nochmal kompilieren, Lib ändern zeigen dass main nicht neu gebaut wird}
 \end{frame}
 
-\section{Speicherverwaltung}
+\section{Speicher}
 \begin{frame}
     \frametitle{Stack und Heap}
     \begin{columns}
@@ -169,25 +172,138 @@
     \end{columns}
 \end{frame}
 
+\begin{frame}
+    \frametitle{Stack}
+    \begin{columns}
+        \begin{column}{.5\textwidth}
+            \lstinputlisting{examples/slides/stack.c}
+        \end{column}
+        \begin{column}{.5\textwidth}
+            \begin{figure}[H]
+                \centering
+                \only<1> {
+                    \begin{tikzpicture}
+                        \draw [draw] (0,0) rectangle (3,6);
+                    \end{tikzpicture}
+                    \pnote{Anfang: Stack Leer (Hinweis: Stack = Stappel)}
+                }
+                \only<2,6> {
+                    \begin{tikzpicture}
+                        \draw [draw] (0,0) rectangle (3,6);
+                        \filldraw [draw=black,fill=gray!20] (0,0) rectangle (3,1) node[pos=.5] {\lstinline{int a}};
+                        \filldraw [draw=black,fill=gray!20] (0,1) rectangle (3,2) node[pos=.5] {\lstinline{int b}};
+                    \end{tikzpicture}
+                    \pnote{Lokale Variablen für Funktion werden der Reihe nach auf Stack gelegt}
+                    \pnote{Nach beenden der Funktion werden Variablen wieder vom Stack genommen}
+                }
+                \only<3> {
+                    \begin{tikzpicture}
+                        \draw [draw] (0,0) rectangle (3,6);
+                        \filldraw [draw=black,fill=gray!20] (0,0) rectangle (3,1) node[pos=.5] {\lstinline{int a}};
+                        \filldraw [draw=black,fill=gray!20] (0,1) rectangle (3,2) node[pos=.5] {\lstinline{int b}};
+                        \filldraw [draw=black,fill=gray!20] (0,2) rectangle (3,3) node[pos=.5] {Verwaltungsinfo};
+                    \end{tikzpicture}
+                    \pnote{Für jeden Funktionsaufruf wird ein "Stackframe" angelegt}
+                }
+                \only<4> {
+                    \begin{tikzpicture}
+                        \draw [draw] (0,0) rectangle (3,6);
+                        \filldraw [draw=black,fill=gray!20] (0,0) rectangle (3,1) node[pos=.5] {\lstinline{int a}};
+                        \filldraw [draw=black,fill=gray!20] (0,1) rectangle (3,2) node[pos=.5] {\lstinline{int b}};
+                        \filldraw [draw=black,fill=gray!20] (0,2) rectangle (3,3) node[pos=.5] {Verwaltungsinfo};
+                        \filldraw [draw=black,fill=gray!20] (0,3) rectangle (3,4) node[pos=.5] {\lstinline{int arg}};
+                    \end{tikzpicture}
+                    \pnote{Für jeden Funktionsaufruf wird ein "Stackframe" angelegt}
+                }
+                \only<5> {
+                    \begin{tikzpicture}
+                        \draw [draw] (0,0) rectangle (3,6);
+                        \filldraw [draw=black,fill=gray!20] (0,0) rectangle (3,1) node[pos=.5] {\lstinline{int a}};
+                        \filldraw [draw=black,fill=gray!20] (0,1) rectangle (3,2) node[pos=.5] {\lstinline{int b}};
+                        \filldraw [draw=black,fill=gray!20] (0,2) rectangle (3,3) node[pos=.5] {Verwaltungsinfo};
+                        \filldraw [draw=black,fill=gray!20] (0,3) rectangle (3,4) node[pos=.5] {\lstinline{int arg}};
+                        \filldraw [draw=black,fill=gray!20] (0,4) rectangle (3,5) node[pos=.5] {\lstinline{int res}};
+                    \end{tikzpicture}
+                    \pnote{Für jeden Funktionsaufruf wird ein "Stackframe" angelegt}
+                }
+            \end{figure}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \Huge{Reicht das nicht?}
+    \pnote{Limitierung: wenn Speicher länger als Funktion bestehen soll und z.t. wenn dynamisch Speicher gebraucht wird}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Heap}
+    \begin{columns}
+        \begin{column}{.5\textwidth}
+            \lstinputlisting{examples/slides/heap.cpp}
+            \pnote{Unterscheidung zu Java: new erfordert MANUELLE speicherverwaltung}
+        \end{column}
+        \begin{column}{.5\textwidth}
+            \begin{figure}[H]
+                \centering
+                \only<1> {
+                    \begin{tikzpicture}
+                        \draw [draw] (0,0) rectangle (3,6);
+                        \filldraw [draw=black,fill=gray!20] (0,5) rectangle (3,4) node[pos=.5] {In Verwendung};
+                    \end{tikzpicture}
+                    \pnote{Heap wird nicht der Reihe nach belegt, einzelne Teile können schon belegt sein (z.b. von ld)}
+                }
+                \only<2> {
+                    \begin{tikzpicture}
+                        \draw [draw] (0,0) rectangle (3,6);
+                        \filldraw [draw=black,fill=gray!20] (0,5) rectangle (3,4) node[pos=.5] {In Verwendung};
+                        \filldraw [draw=black,fill=gray!20] (0,4) rectangle (3,2) node[pos=.5] {\lstinline{a}};
+                    \end{tikzpicture}
+                    \pnote{new fragt nach neuem Speicher: wie hier sichtbar muss der explizit gesucht werden}
+                }
+                \only<3> {
+                    \begin{tikzpicture}
+                        \draw [draw] (0,0) rectangle (3,6);
+                        \filldraw [draw=black,fill=gray!20] (0,5) rectangle (3,4) node[pos=.5] {In Verwendung};
+                        \filldraw [draw=black,fill=gray!20] (0,4) rectangle (3,2) node[pos=.5] {\lstinline{a}};
+                        \filldraw [draw=black,fill=gray!20] (0,2) rectangle (3,0) node[pos=.5] {\lstinline{b}};
+                    \end{tikzpicture}
+                    \pnote{new nicht wie Java}
+                }
+                \only<4> {
+                    \begin{tikzpicture}
+                        \draw [draw] (0,0) rectangle (3,6);
+                        \filldraw [draw=black,fill=gray!20] (0,5) rectangle (3,4) node[pos=.5] {In Verwendung};
+                        \filldraw [draw=black,fill=gray!20] (0,2) rectangle (3,0) node[pos=.5] {\lstinline{b}};
+                    \end{tikzpicture}
+                    \pnote{mit delete muss speicher explizit freigegeben, sonst Leak, siehe b}
+                }
+                
+            \end{figure}
+        \end{column}
+    \end{columns}
+\end{frame}
+
 \section{Pointer}
 \begin{frame}
     \frametitle{Pointer}
     \begin{itemize}
         \item Pointer 
-            \pnote{"Vererbt" von C}
             \pause
         \item Angst!
             \pause
         \item Gefährlich!
             \pause
         \item Böse!
-            \pnote{Pointer kurz erklären, kurz Owner (malloc/new) bzw. nur als Referenz erklären}
             \pause
         \item Nicht schlimm aber viel Fehlerpotential
             \pnote{Leaks, Owner nicht definiert, vor allem bei Librarys relevant}
             \pause
+        \item Was ist ein Pointer: eigentlich nur ein \lstinline{int} den der Compiler separat behandelt.
+            \pnote{int repräsentiert die Adresse der variable}
+            \pause
         \item \lstinline{int b = 17; int *a = &b;}
-            \pnote{Pointer als Referenz}
+            \pnote{Pointer als Referenz, Pointer zeigt auf Stack, dereferenzierung und address of}
             \pause
         \item \lstinline{int *c = new int();}
             \pnote{Pointer als Owner, Hier gleich ein potentieller Leak}
@@ -195,7 +311,7 @@
         \item \lstinline{delete c;}
             \pnote{Immer mit delete, das will doch wirklich keiner}
             \pause
-        \item Gehört nicht in die Anwendungslogik
+        \item Speicherverwaltung gehört nicht in die Anwendungslogik
             \pnote{Permanente Fehlerquelle, Zeitverschwendung, Ab jetzt als Raw-Pointer bezeichnet und nie wieder verwenden!}
     \end{itemize}
 \end{frame}
@@ -267,6 +383,72 @@
         \item Für große Objekte unnötige Performanceeinbuße
             \pnote{Spricht gegen das was ich in Einleitung gesagt habe, Performance in C++ wichtig}
     \end{itemize}
+\end{frame}
+
+\section{Mehr C++}
+
+\begin{frame}
+    \frametitle{Smart-Pointer}
+    \begin{itemize}
+        \item Standardlibrary kann Verwaltung übernehmen
+            \pnote{Erwähnung Operatorenüberladung und Lifetime}
+            \pause
+        \item \lstinline{unique\_ptr}
+            \pnote{Quasi Drop-In-Replacement für Raw-Ptr, machen selber den Speicher am Ende der Lebenszeit frei}
+            \pause
+        \item Genau ein Owner
+            \pnote{Explizit verboten zu kopieren (=delete), Bsp. kopieren in Klasse, jetzt uneindeutiger Owner. Oftmals für Factory Methoden, kein Overhead zu Raw-Pointer}
+            \pause
+        \item
+            \lstinline{std::unique\_ptr<int> a = std::make\_unique<int>(17);}
+            \pause
+        \item \lstinline{shared\_ptr}
+            \pnote{Zusätzlich Zählen von Instanzen (siehe Copy-Constructor)}
+            \pause
+        \item Quasi immer nutzbar
+            \pnote{Dafür kopieren... minimal langsamer (nicht bei Zugriff)}
+        \item
+            \lstinline{std::shared\_ptr<int> a = std::make\_shared<int>(17);}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Referenzen}
+    \begin{itemize}
+        \item Sprachfeature kein Library-Feature
+            \pnote{Werden vom Compiler zu Pointern gemacht, nie Owner. Hier betrachtet L-Value-Referenzen}
+            \pause
+        \item Können nicht null sein
+            \pnote{Zeigen immer auf anderes Objekt, eine Art Alias}
+            \pause
+        \item Können aber ungültig werden
+            \pnote{z.B. lokale Variablen}
+            \pause
+        \item
+            \lstinline{int b = 17; int &a = b;}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Zusammenfassung Pointer}
+    \begin{itemize}
+        \item Raw-Pointer: Sollten quasi nie verwendet werden
+            \pnote{Ausser pre C++11 und mit C APIs}
+            \pause
+        \item Unique-Pointer: Oftmals ersatz für Raw-Pointer
+            \pnote{Limitierung: Ein Owner kein Overhead}
+            \pause
+        \item Shared-Pointer: Sichere Pointer für beliebig viele Owner
+            \pnote{Am Ähnlichsten zu Java, aber etwas Overhead (immer noch weniger als Java und definierte Lifetime)}
+            \pause
+        \item Referenzen: Oftmals um Kopien zu vermeiden
+            \pnote{Sprachfeature}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \Huge{Beispiel: Pointer \& Referenzen}
+    \pnote{Wo Pointer/Ref einbauen? Frage welche Sorte Pointer. HelloWorld Lib Ergänzen mit Referenzen, jetzt in CLion}
 \end{frame}
 
 \end{document}
