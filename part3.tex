@@ -33,7 +33,7 @@
 
 
 \title{Eine Einführung in modernes C++ mit CMake}
-\subtitle{Teil 3 -- Speicherverwaltende Klassen und Tools}
+\subtitle{Teil 3 -- Unittest, Tools und Bestpractices}
 \author{Paul Nykiel}
 \date{\today}
 
@@ -46,33 +46,73 @@
     \tableofcontents
 }
 
-\section{Tools}
-\pnote{Kleine Auswahl an Tools}
+\section{Unittests}
 \begin{frame}
-    \frametitle{GTest}
-    \lstinputlisting{examples/slides/gtest.cpp}
+    \frametitle{Was sind Unittests?}
+    \begin{itemize}
+        \item Möglichst kleine Komponenten des Codes testen (z.B. einzelne Funktion/Klasse)
+            \pnote{Auf dieser Ebene noch möglich Korrektheit zu bestätigen}
+            \pause
+        \item Nicht komplette Codebase notwendig
+            \pnote{z.B. kein ADTF, Edgecases müssen nicht in echter Welt konstruiert werden}
+            \pause
+        \item Restlicher Code kann auf Korrektheit vertrauen
+            \pnote{Vertrauen auf Model, selbst bei Änderungen} 
+            \pause
+        \item Vorgehen: Festdefinierte Eingabe und daraus resultierende Ausgabe
+            \pnote{Entwickler definiert Eingabe und was resultat sein muss}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Google Test - Einführung}
+    \begin{itemize}
+        \item Tests von einem Modul werden in einer Testsuite zusammengefasst
+            \pnote{D.h. eine Testsuite für Funktion A, eine für Funktion B}
+            \pause
+        \item Innerhalb einer Testsuite können beliebig viele Tests angelegt werden
+            \pnote{Pro Test ein Name}
+            \pause
+        \item Jeder Test sollte genau eine Funktionalität prüfen
+            \pnote{Dann kann sofort erkannt werden was nicht funktioniert, Tests bleiben kompakt}
+            \pause
+        \item Bedingungen mit Makros testen
+            \pnote{Z.B. Gleichheit, größer, keine Exception...}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Google Test - Funktionen}
+    \lstinputlisting{examples/slides/gtest1.cpp}
     \pnote{Diverseste Bedinungen, z.B. auch Float, integration in CLion}
 \end{frame}
 
 \begin{frame}
-    \frametitle{Debugging und Fehlersuche}
-    \begin{itemize}
-        \item Debugger
-            \pnote{z.B. GDB, quasi beliebig, wichtigestes Tool}
-            \pause
-        \item Valgrind
-            \pnote{Erkennt Speicherlecks, undefiniertes Verhalten, aber Langsam}
-            \pause
-        \item LibAdressSanitizer (Asan)
-            \pnote{Wie Valgrind nur schnell und neuer}
-            \pause
-        \item clang-tidy
-            \pnote{Statische Analyse, Fehler vor der Compilieren entdecken}
-    \end{itemize}
+    \frametitle{Google Test - Klassen}
+    \lstinputlisting{examples/slides/gtest2.cpp}
+    \pnote{Diverseste Bedinungen, z.B. auch Float, integration in CLion}
 \end{frame}
 
-\section{Abschluss}
+\section{Tools}
+\begin{frame}
+    \Huge{Demo: Debugger}
+    \pnote{Einfach Average Implementierung, Breakpoints und Variablen zeigen, Hinweis: auch bei Abstürzen}
+\end{frame}
 
+\begin{frame}
+    \Huge{Demo: Valgrind}
+    \pnote{Einfachen Memory Leak bauen, vllt. Use After Free}
+\end{frame}
+
+\begin{frame}
+    \Huge{Demo: clang-tidy}
+    \pnote{Vorheriges Beispiel: Warnings anzeigen, und fixen}
+\end{frame}
+
+\section{Best Practices}
+
+
+\section{Abschluss}
 \begin{frame}
     \frametitle{Was fehlt?}
     \begin{itemize}
@@ -115,5 +155,18 @@
             \pnote{Gutes Buch, deutliche Vertiefung}
     \end{itemize}
 \end{frame}
+
+\section{Praxis}
+\begin{frame}
+    \frametitle{Praxis}
+    \begin{itemize}
+        \item Schreibt Unittests für den Huffman Encoder
+            \pause
+        \item Untersucht das Verhalten: meldet Valgrind Probleme? meldet clang-tidy welche?
+            \pause
+        \item Wenn Zeit bleibt: entwickelt euere komplett eigene B-Baum implementierung, ohne STL
+    \end{itemize}
+\end{frame}
+
 
 \end{document}
