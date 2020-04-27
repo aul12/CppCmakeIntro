@@ -110,25 +110,130 @@
 \end{frame}
 
 \section{Best Practices}
+\pnote{Nicht aller Code der compiliert ist zwingend korrekt}
+\pnote{Best Practices helfen hoffentlich korrekten Code zu schreiben}
+\pnote{UB vermeiden}
+\pnote{Volle Liste im Wiki}
+
 \begin{frame}
     \frametitle{Allgemein}
-    Auskommentierter Code, Warnings, Sichtbarkeit, Duplicate Code,
-    Keine einzeiligen ifs, Magic Numbers
+    \begin{itemize}
+        \item Auskommentierter Code entfernen
+            \pnote{Wir haben git}
+            \pause
+        \item Warnings beachten
+            \pnote{Warnings haben einen Grund!}
+            \pause
+        \item Sichtbarkeit minimieren
+            \pnote{Fehlerminimierung}
+            \pnote{Bsp. Member Private, Namespaces, reicht eine lokale Variable?}
+            \pause
+        \item Duplicate Code vermeiden
+            \pnote{Macht Code unnötige Lange + schlecht wartbar}
+            \pause
+        \item Einzeilige \lstinline{if} klammern
+            \pnote{Große Fehlerquelle, Anweisung in nächste Zeile und mit klammern}
+            \pause
+        \item Magic Numbers extrahieren
+            \pnote{Nutzt Konstanten oder ADTF properties}
+    \end{itemize}
 \end{frame}
 
 \begin{frame}
-    \frametitle{Funktionen}
-    In, In-Out, Out-Parameter, Tuple als Return, Structure Bindings, Optional
+    \frametitle{Funktionen - In Parameter}
+    {\Large In-Parameter: Wird von der Funktion nur gelesen}
+
+    \vspace{1cm}
+
+    \pause
+    Für In-Parameter gilt:
+    \begin{itemize}
+        \item Wenn trivial zu kopieren: by-value:
+            \lstinline{double sqrt(double v);}
+            \pnote{Auch Referenz muss kopiert werden, Kopie kann z.B. in Reg liegen}
+            \pause
+        \item Für größere Objekte: als \lstinline{const}-Referenz:
+            \lstinline{double getMax(const std::vector<double> &v);}
+            \pnote{Keine große Kopie}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Funktionen - In-Out Parameter}
+    {\Large In-Out-Parameter: Wird von der Funktion gelesen und geschrieben}
+
+    \vspace{1cm}
+
+    \pause
+    Für In-Out-Parameter gilt:
+    \begin{itemize} 
+        \item Als Referenz an Funktion übergeben:
+            \lstinline{void removeDuplicates(std::vector<int> &v);}
+            \pnote{Kein Pointer, kein Copy-Return}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Funktionen - Out Parameter}
+    {\Large Out-Parameter: Wird von der Funktion nur geschrieben}
+
+    \vspace{1cm}
+
+    \pause
+    Für Out-Parameter gilt:
+    \begin{itemize}
+        \item Immer via \lstinline{return}
+            \pnote{Muss nicht default-Konstruierbar sein}
+            \pnote{Copy-Ellision Funktioniert}
+    \end{itemize}
+\end{frame} 
+
+\begin{frame}
+    \frametitle{Funktionen - Out Parameter}
+    \begin{itemize}
+        \item Aber C kann nur einen Wert auf einmal returnen? \pause \lstinline{std::tuple}, \lstinline{std::pair} oder \lstinline{struct}
+            \pause
+        \item \lstinline{struct} für komplexere Datentypen
+            \pnote{Bei gleichen Typen sonst Fehlerquelle}
+            \pause
+        \item Structure Binding:
+            \lstinline{auto [min, max, avg] = getMinMaxAvg(list);}
+            \pnote{Für Pair, Tuple und Struct}
+            \pause
+        \item Für Werte die in manchen Fällen nicht existieren: \lstinline{std::optional}.
+            \lstinputlisting{examples/slides/optional.cpp}
+    \end{itemize}
 \end{frame}
 
 \begin{frame}
     \frametitle{C-Konstrukte}
-    Raw Pointer, Array, Enum, Makros
+    \begin{itemize}
+        \item Referenzen bzw. Smart-Pointer statt Raw-Pointer
+            \pnote{Ownership nicht klar, Leaks}
+            \pause
+        \item \lstinline{enum class} statt \lstinline{enum}
+            \pnote{Scope, kein implizitier Cast}
+            \pause
+        \item \lstinline{std::array} und \lstinline{std::vector} statt C-Style Arrays (\lstinline{int arr[10]};)
+            \pnote{Kein impliziter Decay, Längeninformation, Pointer mit .data()}
+            \pause
+        \item (Template-) Funktionen statt Makros
+            \pnote{Siehe Wiki für mehr Beispiele}
+    \end{itemize}
 \end{frame}
 
 \begin{frame}
-    \frametitle{Formatierung}
-    Include Guards, Endung, Alle Header inkludieren, eigene Translation Unit
+    \frametitle{Header}
+    \begin{itemize}
+        \item Header immer mit Include-Guards schützen
+            \lstinputlisting{examples/slides/includeguards.cpp}
+            \pnote{verhindert mehrfaches inkludieren in selber TU}
+        \item Alle verwendeten Header inkludieren
+            \pnote{Code kann in einem Context compilieren, in einem anderen nicht}
+            \pause
+        \item Code in einer \lstinline{.cpp} Datei implementieren, nicht im Header
+            \pnote{Sonst längere Buildzeiten, Linkerprobleme}
+    \end{itemize}            
 \end{frame}
 
 \section{Abschluss}
