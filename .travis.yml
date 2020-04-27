@@ -9,7 +9,7 @@ git:
 script:
     - mkdir output
     - make
-    - mv main.pdf output/main.pdf
+    - mv part*.pdf output/
 
 deploy:
     provider: pages
