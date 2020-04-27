@@ -32,8 +32,8 @@
 }
 
 
-\title{Eine Einführung in modernes C++ mit CMake}
-\subtitle{Teil 3 -- Unittest, Tools und Bestpractices}
+\title{Eine Einführung in modernes C++}
+\subtitle{Teil 3 -- Unittest, Tools und best practices}
 \author{Paul Nykiel}
 \date{\today}
 
@@ -110,7 +110,26 @@
 \end{frame}
 
 \section{Best Practices}
+\begin{frame}
+    \frametitle{Allgemein}
+    Auskommentierter Code, Warnings, Sichtbarkeit, Duplicate Code,
+    Keine einzeiligen ifs, Magic Numbers
+\end{frame}
 
+\begin{frame}
+    \frametitle{Funktionen}
+    In, In-Out, Out-Parameter, Tuple als Return, Structure Bindings, Optional
+\end{frame}
+
+\begin{frame}
+    \frametitle{C-Konstrukte}
+    Raw Pointer, Array, Enum, Makros
+\end{frame}
+
+\begin{frame}
+    \frametitle{Formatierung}
+    Include Guards, Endung, Alle Header inkludieren, eigene Translation Unit
+\end{frame}
 
 \section{Abschluss}
 \begin{frame}
@@ -164,7 +183,7 @@
             \pause
         \item Untersucht das Verhalten: meldet Valgrind Probleme? meldet clang-tidy welche?
             \pause
-        \item Wenn Zeit bleibt: entwickelt euere komplett eigene B-Baum implementierung, ohne STL
+        \item Lest euch die Code-Richtlinien (\url{https://git.spatz.wtf/spatzenhirn/wiki/-/wikis/Software/Cup2021/CodeRichtlinien}) durch und überprüft ob euer Code die Richtlinien erfüllt.
     \end{itemize}
 \end{frame}
 

@@ -27,9 +27,6 @@ show2: part2.pdf
 show3: part3.pdf
 	$(SCREEN) -dm $(VIEWER) part3.pdf 2> /dev/null
 
-present: main.pdf
-	$(PRESENTER) main.pdf
-
 clean:
 	rm -f *.toc
 	rm -f *.aux
