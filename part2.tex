@@ -89,6 +89,9 @@
         \item
             \lstinputlisting{examples/slides/raii.cpp}
             \pnote{Trailing return type, Const-Correctness, Objekte werden im Konstruktor initialisiert, alle Objekte werden im Konstruktor geschlossen} 
+            \pause
+        \item Auch bei eigenen Klassen anwenden, Klassen sollten nach Konstruktor in korrektem Zustand sein
+            \pnote{Also keine init(), close() Methode, da Fehlerquelle}
     \end{itemize}
 \end{frame}
 
