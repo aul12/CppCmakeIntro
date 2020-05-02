@@ -1,16 +1,9 @@
 cmake_minimum_required(VERSION 3.10)
 
-set(STANDARD 17)
-set(COMMON_FLAGS "-Wall")
-
-if (CMAKE_BUILD_TYPE STREQUAL "Release")
-    set(COMMON_FLAGS "${COMMON_FLAGS} -O3")
-endif ()
-
-set(CMAKE_C_STANDARD ${STANDARD})
-set(CMAKE_CXX_STANDARD ${STANDARD})
-set(CMAKE_C_FLAGS ${COMMON_FLAGS})
-set(CMAKE_CXX_FLAGS ${COMMON_FLAGS})
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_C_FLAGS "-Wall")
+set(CMAKE_CXX_FLAGS "-Wall")
 
 project(MyProject)
 add_executable(${PROJECT_NAME} main.c mylib.c)
