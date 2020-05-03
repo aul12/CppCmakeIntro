@@ -1,9 +1,9 @@
 digraph {
-    fontname = "Helvetica"
+    fontname = "Computer Modern"
     fontsize = 8
 
     node [
-        fontname = "Helvetica"
+        fontname = "Computer Modern"
         fontsize = 8
         shape = "record"
         fillcolor = "gray"
@@ -11,7 +11,7 @@ digraph {
     ]
 
     edge [
-        fontname = "Helvetica"
+        fontname = "Computer Modern"
         fontsize = 8
         arrowhead = "normal"
     ]
