@@ -1,5 +1,5 @@
 TEST(Sqrt, Simple) {
-    EXPECT_DOUBLE(sqrt(4), 2);
+    EXPECT_DOUBLE_EQ(sqrt(4), 2);
 }
 
 TEST(Sqrt, NonInteger) {
